@@ -1,0 +1,67 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+    
+    
+    
+    <http auto-config="true" use-expressions="true">
+        <intercept-url pattern="/" access="permitAll" />
+        <intercept-url pattern="/home" access="permitAll" />
+        <intercept-url pattern="/aboutUs" access="permitAll" />
+        <intercept-url pattern="/admin/**" access="hasRole('ADMIN')" />
+        <intercept-url pattern="/singleupload" access="permitAll" />
+        <intercept-url pattern="/allproducts" access="hasRole('ADMIN') or hasRole('WARMENAGER') or hasRole('SHOPMENAGER')" />
+        <intercept-url pattern="/newproduct" access="hasRole('ADMIN') or hasRole('WARMENAGER')" />
+        <intercept-url pattern="/delete-product-*" access="hasRole('ADMIN') or hasRole('WARMENAGER')" />
+        <intercept-url pattern="/edit-product-*" access="hasRole('ADMIN') or hasRole('WARMENAGER')" />
+        <intercept-url pattern="/cart" access="hasRole('ADMIN') or hasRole('SHOPMENAGER')" />
+        <intercept-url pattern="/saveorder" access="hasRole('ADMIN') or hasRole('SHOPMENAGER')" />
+        <intercept-url pattern="/addtocart-*" access="hasRole('ADMIN') or hasRole('SHOPMENAGER')" />
+        <intercept-url pattern="/allorders" access="hasRole('ADMIN') or hasRole('EMPMENAGER') or hasRole('WARMENAGER')" />
+        <intercept-url pattern="/allordersuser" access="hasRole('ADMIN') or hasRole('SHOPMENAGER')" />
+        <intercept-url pattern="/deleteorder-*" access="hasRole('ADMIN') or hasRole('SHOPMENAGER')" />
+        <intercept-url pattern="/alldetailsorders-*" access="hasRole('ADMIN') or hasRole('WARMENAGER') or hasRole('SHOPMENAGER')" />
+        <intercept-url pattern="/orderreject-*" access="hasRole('ADMIN') or hasRole('WARMENAGER')" />
+        <intercept-url pattern="/orderasccept-*" access="hasRole('ADMIN') or hasRole('WARMENAGER')" />
+        <intercept-url pattern="/listusers" access="hasRole('ADMIN') or hasRole('EMPMENAGER')"/>
+        <intercept-url pattern="/newuser/**" access="hasRole('ADMIN')" />
+        <intercept-url pattern="/delete-user-*" access="hasRole('ADMIN')" />
+        <intercept-url pattern="/edit-user-*" access="hasRole('ADMIN')" />
+        <intercept-url pattern="/change-state-*" access="hasRole('ADMIN') or hasRole('EMPMENAGER')" />
+        <form-login  login-page="/login"
+                     username-parameter="userName"
+                     password-parameter="password"
+                     authentication-success-handler-ref="customSuccessHandler"                      
+                     authentication-failure-url="/login?error=true"  />
+        <csrf/>
+         <access-denied-handler error-page="/accessDenied" />
+         
+         
+         <remember-me remember-me-parameter="remember-me"
+                      remember-me-cookie="remember-me"
+                      token-validity-seconds="3600"
+                      data-source-ref="dataSource"  />
+    </http>
+  
+    <authentication-manager >
+        <authentication-provider user-service-ref="customUserDetailsService">        
+            <password-encoder ref="bcryptEncoder"/>
+        </authentication-provider>        
+    </authentication-manager>
+    
+    
+    <beans:bean id="customUserDetailsService" class="com.mycompany.assigmentweb.service.CustomUserDetailsService" />
+    <beans:bean id="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+    <beans:bean id="customSuccessHandler" class="com.mycompany.assigmentweb.configuration.CustomSuccessHandler" />
+    
+    
+
+    <!-- From redirect in role page 
+    *IN <form-login> authentication-success-handler-ref="customSuccessHandler"
+    <beans:bean id="customSuccessHandler" class="com.mycompany.assigmentweb.configuration.CustomSuccessHandler" /> -->
+    
+      
+     
+</beans:beans>
