@@ -1,4 +1,4 @@
-# webShop
+# WebShop
 
 
 ![Capture](https://user-images.githubusercontent.com/79508257/128847434-b297f196-30b8-4dd9-864e-c9a9a816c7aa.JPG)
